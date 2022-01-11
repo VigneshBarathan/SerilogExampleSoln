@@ -7,7 +7,8 @@ namespace SerilogExampleApp
     {
         static void Main(string[] args)
         {
-            Serilogfunc();
+            //Serilogfunc();
+            Seqfunc();
         }
 
         private static void Serilogfunc()
@@ -29,6 +30,21 @@ namespace SerilogExampleApp
             Log.CloseAndFlush();
             Console.WriteLine("Completed");
             Console.ReadLine();
+        }
+
+        private static void Seqfunc()
+        {
+            Log.Logger = new LoggerConfiguration()
+            .WriteTo.Console()
+            .WriteTo.Seq("http://localhost:5341")
+            .CreateLogger();
+
+            Log.Information("Hello, {Name}!", Environment.UserName);
+
+            // Important to call at exit so that batched events are flushed.
+            Log.CloseAndFlush();
+
+            Console.ReadKey(true);
         }
     }
 }
